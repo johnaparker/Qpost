@@ -4,9 +4,9 @@ import h5py as h5
 from scipy.optimize import curve_fit
 
 def load_flux(filename, dataname):
-    h5file = h5.File(filename, 'r')
-    h5data = h5file[dataname]
-    flux = np.array(h5data)
+    with  h5.File(filename, 'r') as h5file:
+        h5data = h5file[dataname]
+        flux = np.array(h5data)
     return flux
 
 def gaussian(x, A, x0, sig, c):

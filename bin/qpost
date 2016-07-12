@@ -3,6 +3,7 @@
 import argparse
 import qpost
 import matplotlib.pyplot as plt
+import h5py
 print("Qpost is working!")
 
 # parse input
@@ -31,9 +32,15 @@ if args.command == "flux":
     # h5file = args.h5file[:index]
     # dataname = args.h5file[index+1:]
     # flux = qpost.monitors.load_flux(h5file, dataname)
-    for dataset in args.dataset:
-        flux = qpost.monitors.load_flux(args.h5file, dataset)
-        plt.plot(flux, '.-', label=dataset)
+    if not args.dataset:
+        with h5py.File(args.h5file, 'r') as h5file:
+            for dset in h5file["Monitors"].keys():
+                flux = qpost.monitors.load_flux(args.h5file, "Monitors/{}".format(dset))
+                plt.plot(flux, '.-', label=dset)
+    else:
+        for dataset in args.dataset:
+            flux = qpost.monitors.load_flux(args.h5file, dataset)
+            plt.plot(flux, '.-', label=dataset)
     plt.legend()
     plt.show()
     
