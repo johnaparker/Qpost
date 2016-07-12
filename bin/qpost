@@ -12,7 +12,7 @@ parser_a = subparsers.add_parser('flux', help='flux help')
 parser_b = subparsers.add_parser('video', help='video help')
 
 parser_a.add_argument('h5file', type=str, help='HDF5 file to be used')
-parser_a.add_argument('dataset', type=str, help='Dataset inside HDF5 file to be used')
+parser_a.add_argument('dataset', nargs='*', type=str, help='Dataset(s) inside HDF5 file to be used')
 
 parser_b.add_argument('h5file', type=str, help='HDF5 file to be used')
 parser_b.add_argument('dataset', type=str, help='Dataset inside HDF5 file to be used')
@@ -31,8 +31,10 @@ if args.command == "flux":
     # h5file = args.h5file[:index]
     # dataname = args.h5file[index+1:]
     # flux = qpost.monitors.load_flux(h5file, dataname)
-    flux = qpost.monitors.load_flux(args.h5file, args.dataset)
-    plt.plot(flux, '.')
+    for dataset in args.dataset:
+        flux = qpost.monitors.load_flux(args.h5file, dataset)
+        plt.plot(flux, '.-', label=dataset)
+    plt.legend()
     plt.show()
     
 if args.command == "video":
