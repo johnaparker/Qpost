@@ -95,10 +95,10 @@ def make_video_other2(h5file, dataset, t0=0, tf=-1, ms=30, saveFile=None,
         vmin = -vmax
         
         if norm:
-            vmax = np.max(dset[...])
-            # for i in range(t0+1, tf):
-                # dataImg = dset[:,:,i]
-                # vmax = max(vmax,np.max(dataImg))
+            # vmax = np.max(dset[...])
+            for i in range(t0+1, tf):
+                dataImg = dset[:,:,i]
+                vmax = max(vmax,np.max(dataImg))
             vmin = -vmax
 
         im = plt.imshow(dataImg, cmap=plt.get_cmap('bwr'), vmin=vmin, vmax=vmax,  animated=True)

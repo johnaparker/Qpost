@@ -14,6 +14,8 @@ parser_b = subparsers.add_parser('video', help='video help')
 
 parser_a.add_argument('h5file', type=str, help='HDF5 file to be used')
 parser_a.add_argument('dataset', nargs='*', type=str, help='Dataset(s) inside HDF5 file to be used')
+parser_a.add_argument('-t', nargs='?', type=int, help='Timestep t', default = -1)
+parser_a.add_argument('--anim', action='store_true', help='Flux animation')
 
 parser_b.add_argument('h5file', type=str, help='HDF5 file to be used')
 parser_b.add_argument('dataset', type=str, help='Dataset inside HDF5 file to be used')
@@ -21,7 +23,7 @@ parser_b.add_argument('-t0', nargs='?', type=int, help='Start frame', default = 
 parser_b.add_argument('-tf', nargs='?', type=int, help='End frame', default = -1)
 parser_b.add_argument('-ms', nargs='?', type=int, help='Time between frames, in ms', default = 30)
 parser_b.add_argument('-save', nargs='?', type=str, help='Save animation to output file', default = None)
-parser_b.add_argument('-cores', nargs='?', type=int, help='', default = 1)
+parser_b.add_argument('-cores', nargs='?', type=int, help='', default = -1)
 parser_b.add_argument('-R', action='store_true', help='Flag to normalize max/min across all images')
 
 args = parser.parse_args()
@@ -35,12 +37,18 @@ if args.command == "flux":
     if not args.dataset:
         with h5py.File(args.h5file, 'r') as h5file:
             for dset in h5file["Monitors"].keys():
-                flux = qpost.monitors.load_flux(args.h5file, "Monitors/{}".format(dset))
-                plt.plot(flux, '.-', label=dset)
+                if (args.anim):
+                    qpost.monitors.flux_video(args.h5file, "Monitors/{}".format(dset))
+                else:
+                    flux = qpost.monitors.load_flux(args.h5file, "Monitors/{}".format(dset), args.t)
+                    plt.plot(flux, '.-', label=dset)
     else:
         for dataset in args.dataset:
-            flux = qpost.monitors.load_flux(args.h5file, dataset)
-            plt.plot(flux, '.-', label=dataset)
+            if (args.anim):
+                qpost.monitors.flux_video(args.h5file, "Monitors/{}".format(dataset))
+            else:
+                flux = qpost.monitors.load_flux(args.h5file, dataset, args.t)
+                plt.plot(flux, '.-', label=dataset)
     plt.legend()
     plt.show()
     
