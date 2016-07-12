@@ -6,14 +6,22 @@ import matplotlib.pyplot as plt
 print("Qpost is working!")
 
 # parse input
-parser = argparse.ArgumentParser(prog='PROG')
+parser = argparse.ArgumentParser(prog='qpost')
 subparsers = parser.add_subparsers(help='sub-command help', dest="command")
 parser_a = subparsers.add_parser('flux', help='flux help')
-parser_b = subparsers.add_parser('b', help='b help')
+parser_b = subparsers.add_parser('video', help='video help')
 
 parser_a.add_argument('h5file', type=str, help='HDF5 file to be used')
 parser_a.add_argument('dataset', type=str, help='Dataset inside HDF5 file to be used')
-parser_b.add_argument('foo', type=int, help='foo help')
+
+parser_b.add_argument('h5file', type=str, help='HDF5 file to be used')
+parser_b.add_argument('dataset', type=str, help='Dataset inside HDF5 file to be used')
+parser_b.add_argument('-t0', nargs='?', type=int, help='Start frame', default = 0)
+parser_b.add_argument('-tf', nargs='?', type=int, help='End frame', default = -1)
+parser_b.add_argument('-ms', nargs='?', type=int, help='Time between frames, in ms', default = 30)
+parser_b.add_argument('-save', nargs='?', type=str, help='Save animation to output file', default = None)
+parser_b.add_argument('-cores', nargs='?', type=int, help='', default = 1)
+parser_b.add_argument('-R', action='store_true', help='Flag to normalize max/min across all images')
 
 args = parser.parse_args()
 
@@ -27,3 +35,6 @@ if args.command == "flux":
     plt.plot(flux, '.')
     plt.show()
     
+if args.command == "video":
+    # qpost.video.make_video_other_parallel(args.h5file, args.dataset, args.t0, args.tf, args.ms, args.save, norm=args.R, cores=args.cores)
+    qpost.video.make_video_other2(args.h5file, args.dataset, args.t0, args.tf, args.ms, args.save, norm=args.R)
