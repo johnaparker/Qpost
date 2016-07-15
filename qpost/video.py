@@ -78,7 +78,7 @@ def make_video_other_parallel(h5file, dataset, t0=0, tf=-1, ms=30, saveFile=None
 
 
 def make_video_other2(h5file, dataset, t0=0, tf=-1, ms=30, saveFile=None,
-                      norm=False):
+                      norm=False, monitors=False):
     import numpy as np
     import matplotlib.animation as animation
 
@@ -100,15 +100,40 @@ def make_video_other2(h5file, dataset, t0=0, tf=-1, ms=30, saveFile=None,
                 dataImg = dset[:,:,i]
                 vmax = max(vmax,np.max(dataImg))
             vmin = -vmax
+        
+        points = {} 
+        if monitors:
+            for monitor in f["Monitors"]:
+                group = f["Monitors/{0}".format(monitor)]
+                point1 = np.array(group.attrs["p1"])
+                point2 = np.array(group.attrs["p2"])
+                points[monitor] = ((point1,point2))
 
-        im = plt.imshow(dataImg, cmap=plt.get_cmap('bwr'), vmin=vmin, vmax=vmax,  animated=True)
+        # im = plt.imshow(dataImg, cmap=plt.get_cmap('bwr'), vmin=vmin, vmax=vmax,  animated=True)
+        im = plt.imshow(dataImg, cmap=plt.get_cmap('bwr'), vmin=vmin, vmax=vmax,  animated=True, origin="lower")
+        plt.xlim([0,dset.shape[0]])
+        plt.ylim([0,dset.shape[1]])
 
+        line_objs = []
+        text_objs = []
+        
+        if monitors:
+            for mon in points:
+                if mon[-2] == "_":
+                    continue
+                p1 = 2*points[mon][0]
+                p2 = 2*points[mon][1]
+                box, = plt.plot([p1[0], p1[0], p2[0], p2[0], p1[0]], [p1[1], p2[1], p2[1], p1[1], p1[1]], linewidth=2, linestyle="--", color='black')
+                text = plt.text(p1[0],p2[1]+2, mon)
+                # text = plt.text(p1[0],p2[1]+2, mon, bbox={'facecolor':'white', 'alpha':1, 'pad':1})
+                line_objs.append(box)
+                text_objs.append(text)
 
         def updatefig(frame):
             plt.title(frame)
             dataImg = dset[:,:,frame]
             im.set_array(dataImg)
-            return im,
+            return [im] + line_objs + text_objs
 
         ani = animation.FuncAnimation(fig, updatefig, np.arange(t0,tf), interval=ms, blit=True)
         if saveFile:

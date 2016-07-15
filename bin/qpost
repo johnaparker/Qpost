@@ -25,6 +25,7 @@ parser_b.add_argument('-ms', nargs='?', type=int, help='Time between frames, in 
 parser_b.add_argument('-save', nargs='?', type=str, help='Save animation to output file', default = None)
 parser_b.add_argument('-cores', nargs='?', type=int, help='', default = -1)
 parser_b.add_argument('-R', action='store_true', help='Flag to normalize max/min across all images')
+parser_b.add_argument('--monitors', action='store_true', help='Display monitors')
 
 args = parser.parse_args()
 
@@ -54,4 +55,4 @@ if args.command == "flux":
     
 if args.command == "video":
     # qpost.video.make_video_other_parallel(args.h5file, args.dataset, args.t0, args.tf, args.ms, args.save, norm=args.R, cores=args.cores)
-    qpost.video.make_video_other2(args.h5file, args.dataset, args.t0, args.tf, args.ms, args.save, norm=args.R)
+    qpost.video.make_video_other2(args.h5file, args.dataset, args.t0, args.tf, args.ms, args.save, norm=args.R, monitors=args.monitors)
