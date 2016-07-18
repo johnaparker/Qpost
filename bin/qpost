@@ -4,6 +4,7 @@ import argparse
 import qpost
 import matplotlib.pyplot as plt
 import h5py
+import numpy as np
 print("Qpost is working!")
 
 # parse input
@@ -31,25 +32,26 @@ args = parser.parse_args()
 
 if args.command == "flux":
     print("Flux calculation")
-    # index = args.h5file.find(':')
-    # h5file = args.h5file[:index]
-    # dataname = args.h5file[index+1:]
-    # flux = qpost.monitors.load_flux(h5file, dataname)
     if not args.dataset:
         with h5py.File(args.h5file, 'r') as h5file:
             for dset in h5file["Monitors"].keys():
                 if (args.anim):
-                    qpost.monitors.flux_video(args.h5file, "Monitors/{}".format(dset))
+                    qpost.monitors.flux_video(args.h5file, dset)
                 else:
-                    flux = qpost.monitors.load_flux(args.h5file, "Monitors/{}".format(dset), args.t)
-                    plt.plot(flux, '.-', label=dset)
+                    flux = qpost.monitors.load_flux(args.h5file, dset, args.t)
+                    freq = qpost.monitors.load_freq(args.h5file, dset)
+                    plt.plot(freq, flux, '.-', label=dset)
     else:
         for dataset in args.dataset:
             if (args.anim):
-                qpost.monitors.flux_video(args.h5file, "Monitors/{}".format(dataset))
+                qpost.monitors.flux_video(args.h5file, dataset)
             else:
+                freq = qpost.monitors.load_freq(args.h5file, dataset)
                 flux = qpost.monitors.load_flux(args.h5file, dataset, args.t)
-                plt.plot(flux, '.-', label=dataset)
+                plt.plot(freq, flux, '.-', label=dataset)
+    plt.xlabel("Frequency")
+    plt.xlim([np.min(freq), np.max(freq)])
+    plt.ylabel("Flux")
     plt.legend()
     plt.show()
     

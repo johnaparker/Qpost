@@ -26,14 +26,20 @@ def flux_video(filename, dataname):
         ani = animation.FuncAnimation(fig, update, np.arange(0,tf), interval=30, blit=True)
         plt.show()
 
-def load_flux(filename, dataname, t=-1):
+def load_flux(filename, monitor_name, t=-1):
     with  h5.File(filename, 'r') as h5file:
-        h5data = h5file[dataname]
+        h5data = h5file["Monitors/{}/flux".format(monitor_name)]
         if len(h5data.shape) > 1:
             flux = h5data[:,t]
         else:
             flux = np.array(h5data)
     return flux
+
+def load_freq(filename, monitor_name):
+    with  h5.File(filename, 'r') as h5file:
+        h5data = h5file["Monitors/{}/freq".format(monitor_name)]
+        freq = np.array(h5data)
+    return freq
 
 def gaussian(x, A, x0, sig, c):
     return A*np.exp(-(x-x0)**2/(2*sig**2)) + c
