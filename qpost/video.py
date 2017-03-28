@@ -93,6 +93,8 @@ def make_video_other2(h5file, dataset, t0=0, tf=-1, ms=30, saveFile=None,
         vmax = np.max(dataImg) 
         # vmin = np.min(dataImg) 
         vmin = -vmax
+        # dataImg = np.ravel(dataImg, order='C')
+        # dataImg = np.reshape(dataImg, dset.shape[:2], order='C')
         
         if norm:
             # vmax = np.max(dset[...])
@@ -110,7 +112,7 @@ def make_video_other2(h5file, dataset, t0=0, tf=-1, ms=30, saveFile=None,
                 points[monitor] = ((point1,point2))
 
         # im = plt.imshow(dataImg, cmap=plt.get_cmap('bwr'), vmin=vmin, vmax=vmax,  animated=True)
-        im = plt.imshow(dataImg, cmap=plt.get_cmap('bwr'), vmin=vmin, vmax=vmax,  animated=True, origin="lower")
+        im = plt.imshow(dataImg.T, cmap=plt.get_cmap('RdBu'), vmin=vmin, vmax=vmax,  animated=True, origin="lower")
         plt.xlim([0,dset.shape[0]])
         plt.ylim([0,dset.shape[1]])
 
@@ -132,7 +134,7 @@ def make_video_other2(h5file, dataset, t0=0, tf=-1, ms=30, saveFile=None,
         def updatefig(frame):
             plt.title(frame)
             dataImg = dset[:,:,frame]
-            im.set_array(dataImg)
+            im.set_array(dataImg.T)
             return [im] + line_objs + text_objs
 
         ani = animation.FuncAnimation(fig, updatefig, np.arange(t0,tf), interval=ms, blit=True)
