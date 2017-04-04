@@ -6,4 +6,6 @@ Qpost description
 
 #main submodules
 from . import monitors
-from . import video
+from . import objects
+from . import vec
+from . import viz

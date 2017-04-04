@@ -1,5 +1,5 @@
 import os
-from setuptools import setup
+from setuptools import setup, find_packages
 
 def read(fname):
     return open(os.path.join(os.path.dirname(__file__), fname)).read()
@@ -12,7 +12,7 @@ setup(
     description = ("FDTD post-processing tools for Qbox"),
     license = "MIT",
     keywords = "FDTD",
-    packages=['qpost'],
+    packages=find_packages(),
     scripts=['bin/qpost'],
     long_description=read('README.md'),
     install_requires=['h5py', 'numpy', 'scipy', 'matplotlib'],

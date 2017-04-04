@@ -1,66 +1,57 @@
 import numpy as np
-import matplotlib.pyplot as plt
-import h5py as h5
-from scipy.optimize import curve_fit
+import h5py
+import qpost.vec as vec
 
-def flux_video(filename, dataname):
-    import matplotlib.animation as animation
+def load_frequency(filename, path):
+    with h5py.File(filename, 'r') as f:
+        return f[path]["frequency"][...]
 
-    fig = plt.figure()
-    with  h5.File(filename, 'r') as h5file:
-        dset = h5file[dataname]
-        tf = dset.shape[1] - 1
-        ymax = np.max(dset[...])
-        ymin = np.min(dset[...])
+class monitor:
+    def __init__(self, filename, group_name, monitor_name):
+        self.filename = filename
+        self.group_name = group_name
+        self.path = "/monitors/{0}/{1}".format(group_name, monitor_name)
+        self.freq = load_frequency(filename, self.path)
 
-        xdata = np.arange(dset.shape[0])
-        ydata = dset[:,0]
-        plt.ylim([ymin, ymax])
-        line, = plt.plot(xdata,ydata)
+    def flux(self):
+        with h5py.File(self.filename) as f:
+            return f[self.path]["flux"][...]
+
+class surface_monitor(monitor):
+    def __init__(self, filename, name):
+        super().__init__(filename, "surface_monitor", name)
+        self.surface = vec.load_surface(filename, self.path)
+
+class box_monitor(monitor):
+    def __init__(self, filename, name):
+        super().__init__(filename, "box_monitor", name)
+        self.volume = vec.load_volume(filename, self.path)
+
+class cylinder_monitor(monitor):
+    def __init__(self, filename, name):
+        super().__init__(filename, "cylinder_monitor", name)
+        self.surface = vec.load_cylinder_surface(filename, self.path)
+
+
+# def flux_video(filename, dataname):
+    # import matplotlib.animation as animation
+
+    # fig = plt.figure()
+    # with  h5.File(filename, 'r') as h5file:
+        # dset = h5file[dataname]
+        # tf = dset.shape[1] - 1
+        # ymax = np.max(dset[...])
+        # ymin = np.min(dset[...])
+
+        # xdata = np.arange(dset.shape[0])
+        # ydata = dset[:,0]
+        # plt.ylim([ymin, ymax])
+        # line, = plt.plot(xdata,ydata)
         
-        def update(frame):
-            ydata = dset[:,frame]
-            line.set_data(xdata,ydata)
-            return line,
+        # def update(frame):
+            # ydata = dset[:,frame]
+            # line.set_data(xdata,ydata)
+            # return line,
 
-        ani = animation.FuncAnimation(fig, update, np.arange(0,tf), interval=30, blit=True)
-        plt.show()
-
-def load_flux(filename, monitor_name, t=-1):
-    with  h5.File(filename, 'r') as h5file:
-        h5data = h5file["Monitors/{}/flux".format(monitor_name)]
-        if len(h5data.shape) > 1:
-            flux = h5data[:,t]
-        else:
-            flux = np.array(h5data)
-    return flux
-
-def load_freq(filename, monitor_name):
-    with  h5.File(filename, 'r') as h5file:
-        h5data = h5file["Monitors/{}/freq".format(monitor_name)]
-        freq = np.array(h5data)
-    return freq
-
-def gaussian(x, A, x0, sig, c):
-    return A*np.exp(-(x-x0)**2/(2*sig**2)) + c
-
-
-
-if __name__ == "__main__":
-    f = load_flux("../build/out.h5", "m1")
-    x = np.linspace(1/30,3/30,len(f))
-    plt.plot(x, -f, '.')
-
-    res,var = curve_fit(gaussian, x, -f, (1,1,1,0)) 
-    y_fit = gaussian(x, *res)
-    plt.plot(x,y_fit, linewidth=2, color='r')
-
-    print("A: {}".format(res[0]))
-    print("f0: {}".format( res[1]))
-    print("df: {}".format(abs( res[2])))
-    print("c: {}".format(abs( res[3])))
-    print("")
-    print("l0: {}".format( 1/res[1]))
-    print("dl: {}".format(abs( 1/res[2])))
-
-    plt.show()
+        # ani = animation.FuncAnimation(fig, update, np.arange(0,tf), interval=30, blit=True)
+        # plt.show()
