@@ -6,9 +6,9 @@ class material:
     def __init__(self, filename, path):
         with h5py.File(filename, 'r') as f:
             g = f[path]
-            self.eps = g["eps"][...]
-            self.mu = g["mu"][...]
-            self.conduc = g["conduc"][...]
+            self.eps = g["eps"][0]
+            self.mu = g["mu"][0]
+            self.conduc = g["conduc"][0]
 
 class object:
     def __init__(self, filename, group_name, name):
@@ -27,7 +27,15 @@ class cylinder(object):
         super().__init__(filename, "cylinders", name)
 
         with h5py.File(filename, 'r') as f:
-            self.radius = f[self.path]["radius"][...]
+            self.radius = f[self.path]["radius"][0]
+
+class ellipse(object):
+    def __init__(self, filename, name):
+        super().__init__(filename, "ellipses", name)
+
+        with h5py.File(filename, 'r') as f:
+            self.rx = f[self.path]["rx"][0]
+            self.ry = f[self.path]["ry"][0]
 
 class block(object):
     def __init__(self, filename, name):

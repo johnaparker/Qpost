@@ -2,7 +2,7 @@ import matplotlib.pyplot as plt
 import h5py
 import numpy as np
 import qpost
-from qpost.viz.draw import draw_box,draw_circle
+from qpost.viz.draw import draw_box,draw_circle, draw_ellipse
 from my_pytools.my_matplotlib.style import axis_equal
 
 def make_video(h5file, dataset, t0=0, tf=-1, ms=30, saveFile=None,
@@ -71,11 +71,15 @@ def make_video(h5file, dataset, t0=0, tf=-1, ms=30, saveFile=None,
                         p2 = b.position + b.dimensions/2
                         patch = draw_box(p1, p2, angle=b.angle, **kwargs)
 
+                    if object_group == "ellipses": 
+                        ell = qpost.objects.ellipse(h5file, obj)
+                        patch = draw_ellipse(ell.position, ell.rx, ell.ry, angle=ell.angle, **kwargs)
+
                     object_patches.append(patch)
 
         def updatefig(frame):
             dataImg = dset[:-1,:-1,frame]
-            im.set_array(np.ravel(dataImg.T, order='C'))
+            im.set_array(np.ravel(dataImg.T))
 
             return [im] + monitor_patches + object_patches
 
