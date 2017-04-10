@@ -5,56 +5,34 @@ import qpost
 import matplotlib.pyplot as plt
 import h5py
 import numpy as np
-print("Qpost is working!")
 
 # parse input
 parser = argparse.ArgumentParser(prog='qpost')
 subparsers = parser.add_subparsers(help='sub-command help', dest="command")
-parser_a = subparsers.add_parser('flux', help='flux help')
-parser_b = subparsers.add_parser('video', help='video help')
+flux_parser = subparsers.add_parser('flux', help='flux help')
+video_parser = subparsers.add_parser('video', help='video help')
 
-parser_a.add_argument('h5file', type=str, help='HDF5 file to be used')
-parser_a.add_argument('dataset', nargs='*', type=str, help='Dataset(s) inside HDF5 file to be used')
-parser_a.add_argument('-t', nargs='?', type=int, help='Timestep t', default = -1)
-parser_a.add_argument('--anim', action='store_true', help='Flux animation')
+flux_parser.add_argument('h5file', type=str, help='HDF5 file')
+flux_parser.add_argument('-name', nargs='*', type=str, help='Only use monitors matching a given name', default=None)
+flux_parser.add_argument('-group', nargs='*', type=str, help='Only use monitors in a particular monitor group', default=None)
+flux_parser.add_argument('-t', nargs='?', type=int, help='Timestep t', default = -1)
+# flux_parser.add_argument('--anim', action='store_true', help='Flux animation')
 
-parser_b.add_argument('h5file', type=str, help='HDF5 file to be used')
-parser_b.add_argument('dataset', type=str, help='Dataset inside HDF5 file to be used')
-parser_b.add_argument('-t0', nargs='?', type=int, help='Start frame', default = 0)
-parser_b.add_argument('-tf', nargs='?', type=int, help='End frame', default = -1)
-parser_b.add_argument('-ms', nargs='?', type=int, help='Time between frames, in ms', default = 30)
-parser_b.add_argument('-save', nargs='?', type=str, help='Save animation to output file', default = None)
-parser_b.add_argument('-cores', nargs='?', type=int, help='', default = -1)
-parser_b.add_argument('-R', action='store_true', help='Flag to normalize max/min across all images')
-parser_b.add_argument('--monitors', action='store_true', help='Display monitors')
-parser_b.add_argument('--objects', action='store_true', help='Display objects')
+video_parser.add_argument('h5file', type=str, help='HDF5 file')
+video_parser.add_argument('dataset', type=str, help='Dataset inside HDF5 file to be used')
+video_parser.add_argument('-t0', nargs='?', type=int, help='Start frame', default = 0)
+video_parser.add_argument('-tf', nargs='?', type=int, help='End frame', default = -1)
+video_parser.add_argument('-ms', nargs='?', type=int, help='Time between frames, in ms', default = 30)
+video_parser.add_argument('-save', nargs='?', type=str, help='Save animation to output file', default = None)
+video_parser.add_argument('-cores', nargs='?', type=int, help='', default = -1)
+video_parser.add_argument('-R', action='store_true', help='Flag to normalize max/min across all images')
+video_parser.add_argument('--monitors', action='store_true', help='Display monitors')
+video_parser.add_argument('--objects', action='store_true', help='Display objects')
 
 args = parser.parse_args()
 
 if args.command == "flux":
-    print("Flux calculation")
-    if not args.dataset:
-        with h5py.File(args.h5file, 'r') as h5file:
-            for dset in h5file["Monitors"].keys():
-                if (args.anim):
-                    qpost.monitors.flux_video(args.h5file, dset)
-                else:
-                    flux = qpost.monitors.load_flux(args.h5file, dset, args.t)
-                    freq = qpost.monitors.load_freq(args.h5file, dset)
-                    plt.plot(freq, flux, '.-', label=dset)
-    else:
-        for dataset in args.dataset:
-            if (args.anim):
-                qpost.monitors.flux_video(args.h5file, dataset)
-            else:
-                freq = qpost.monitors.load_freq(args.h5file, dataset)
-                flux = qpost.monitors.load_flux(args.h5file, dataset, args.t)
-                plt.plot(freq, flux, '.-', label=dataset)
-    plt.xlabel("Frequency")
-    plt.xlim([np.min(freq), np.max(freq)])
-    plt.ylabel("Flux")
-    plt.legend()
-    plt.show()
+    qpost.viz.flux.make_flux_plot(args.h5file, args.group, args.name)
     
 if args.command == "video":
     qpost.viz.video.make_video(args.h5file, args.dataset, args.t0, args.tf, args.ms, args.save, norm=args.R, monitors=args.monitors, objects=args.objects)

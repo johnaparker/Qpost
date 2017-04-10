@@ -15,7 +15,10 @@ class monitor:
 
     def flux(self):
         with h5py.File(self.filename) as f:
-            return f[self.path]["flux"][...]
+            if "flux" not in f[self.path]:
+                raise KeyError("{} does not contain a flux".format(self.path))
+            flux = f[self.path]["flux"][...]
+            return flux
 
 class surface_monitor(monitor):
     def __init__(self, filename, name):
