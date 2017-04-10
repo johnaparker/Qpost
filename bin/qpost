@@ -2,9 +2,6 @@
 
 import argparse
 import qpost
-import matplotlib.pyplot as plt
-import h5py
-import numpy as np
 
 # parse input
 parser = argparse.ArgumentParser(prog='qpost')
