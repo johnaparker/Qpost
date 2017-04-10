@@ -3,7 +3,6 @@ import h5py
 import numpy as np
 import qpost
 from qpost.viz.draw import draw_box,draw_circle, draw_ellipse
-from my_pytools.my_matplotlib.style import axis_equal
 
 def make_video(h5file, dataset, t0=0, tf=-1, ms=30, saveFile=None,
                       norm=False, monitors=False, objects=False):
@@ -83,7 +82,7 @@ def make_video(h5file, dataset, t0=0, tf=-1, ms=30, saveFile=None,
 
             return [im] + monitor_patches + object_patches
 
-        axis_equal()
+        plt.gca().set_aspect('equal')
         ani = animation.FuncAnimation(plt.gcf(), updatefig, np.arange(t0,tf), interval=ms, blit=True)
 
         if saveFile:

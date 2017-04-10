@@ -8,6 +8,9 @@ def rotation_transform(axis, angle, ax = plt.gca()):
     return t_rotate + t_scale
 
 def draw_box(p1, p2, angle = 0, ax = plt.gca(), **kwargs):
+    p1 = np.asarray(p1)
+    p2 = np.asarray(p2)
+
     center = (p1 + p2)/2
     t = rotation_transform(center, angle, ax)
 
@@ -18,11 +21,15 @@ def draw_box(p1, p2, angle = 0, ax = plt.gca(), **kwargs):
     return box
 
 def draw_circle(center, radius, ax = plt.gca(), **kwargs):
+    center = np.asarray(center)
+
     circle = mpl.patches.Circle(center, radius, **kwargs)
     ax.add_patch(circle)
     return circle
 
 def draw_ellipse(center, rx, ry, angle = 0, ax = plt.gca(), **kwargs):
+    center = np.asarray(center)
+
     t = rotation_transform(center, angle, ax)
 
     xy = center

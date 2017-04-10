@@ -6,8 +6,10 @@ import qpost
 # parse input
 parser = argparse.ArgumentParser(prog='qpost')
 subparsers = parser.add_subparsers(help='sub-command help', dest="command")
+
 flux_parser = subparsers.add_parser('flux', help='flux help')
 video_parser = subparsers.add_parser('video', help='video help')
+layout_parser = subparsers.add_parser('layout', help='layout help')
 
 flux_parser.add_argument('h5file', type=str, help='HDF5 file')
 flux_parser.add_argument('-name', nargs='*', type=str, help='Only use monitors matching a given name', default=None)
@@ -26,10 +28,15 @@ video_parser.add_argument('-R', action='store_true', help='Flag to normalize max
 video_parser.add_argument('--monitors', action='store_true', help='Display monitors')
 video_parser.add_argument('--objects', action='store_true', help='Display objects')
 
+layout_parser.add_argument('h5file', type=str, help='HDF5 file')
+
 args = parser.parse_args()
 
 if args.command == "flux":
     qpost.viz.flux.make_flux_plot(args.h5file, args.group, args.name)
     
-if args.command == "video":
+elif args.command == "video":
     qpost.viz.video.make_video(args.h5file, args.dataset, args.t0, args.tf, args.ms, args.save, norm=args.R, monitors=args.monitors, objects=args.objects)
+
+elif args.command == "layout":
+    qpost.viz.layout.make_layout(args.h5file)
