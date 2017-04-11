@@ -17,3 +17,10 @@ class line_source(source):
     def __init__(self, filename, name):
         super().__init__(filename, "line", name)
         self.surface = vec.load_surface(filename, self.path)
+
+
+
+class tfsf:
+    def __init__(self, filename):
+        self.path = "/sources/tfsf"
+        self.volume = vec.load_volume(filename, self.path)
