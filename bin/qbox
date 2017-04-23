@@ -1,10 +1,9 @@
 #!/usr/bin/env python3
 
 import argparse
-import qpost
 
 # parse input
-parser = argparse.ArgumentParser(prog='qpost')
+parser = argparse.ArgumentParser(prog='qbox')
 subparsers = parser.add_subparsers(help='sub-command help', dest="command")
 
 flux_parser = subparsers.add_parser('flux', help='flux help')
@@ -37,9 +36,8 @@ material_parser.add_argument('h5file', type=str, help='HDF5 file')
 cross_section_parser.add_argument('h5file', type=str, help='HDF5 file')
 
 args = parser.parse_args()
-import matplotlib.pyplot as plt
-plt.show()
 
+import qpost
 if args.command == "flux":
     qpost.viz.flux.make_flux_plot(args.h5file, args.group, args.name)
     

@@ -13,7 +13,7 @@ setup(
     license = "MIT",
     keywords = "FDTD",
     packages=find_packages(),
-    scripts=['bin/qpost'],
+    scripts=['bin/qbox'],
     long_description=read('README.md'),
     install_requires=['h5py', 'numpy', 'scipy', 'matplotlib'],
     include_package_data = True,
