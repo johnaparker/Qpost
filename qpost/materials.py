@@ -24,8 +24,7 @@ class debye:
     def eps(self, freq):
         """Return the complex permitvitty at freq"""
         omega = 2*np.pi*freq
-        return self.eps_inf + (self.delta_epsilon/(1 - 1j*omega*self.tau))
-        # return self.eps_inf + np.sum(self.delta_epsilon/(1 + 1j*omega*self.tau))
+        return self.eps_inf + np.sum(self.delta_epsilon[:,np.newaxis]/(1 - 1j*omega*self.tau[:,np.newaxis]), axis=0)
 
 
 class drude:
@@ -53,7 +52,7 @@ class lorentz:
     def eps(self, freq):
         """Return the complex permitvitty at freq"""
         omega = 2*np.pi*freq
-        return self.eps_inf - np.sum(self.delta_epsilon*self.omega_0**2/(self.omega_0**2 - omega**2 + 2j*omega*self.gamma))
+        return self.eps_inf - np.sum(self.delta_epsilon[:,np.newaxis]*self.omega_0[:,np.newaxis]**2/(self.omega_0[:,np.newaxis]**2 - omega**2 - 2j*omega*self.gamma[:,np.newaxis]), axis=0)
 
 def load_material(filename, material_name):
     """Load a material from a file of name material_name"""
