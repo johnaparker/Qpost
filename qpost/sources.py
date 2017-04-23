@@ -24,3 +24,16 @@ class tfsf:
     def __init__(self, filename):
         self.path = "/sources/tfsf"
         self.volume = vec.load_volume(filename, self.path)
+
+        with h5py.File(filename, 'r') as f:
+            g = f[self.path]
+            try:
+                self.frequency = g["frequency"][...]
+                self.flux = g["flux"][...]
+            except KeyError:
+                self.frequency = None
+                self.flux = None
+
+
+
+

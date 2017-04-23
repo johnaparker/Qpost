@@ -11,6 +11,7 @@ flux_parser = subparsers.add_parser('flux', help='flux help')
 video_parser = subparsers.add_parser('video', help='video help')
 layout_parser = subparsers.add_parser('layout', help='layout help')
 material_parser = subparsers.add_parser('material', help='material help')
+cross_section_parser = subparsers.add_parser('cross-section', help='cross-section help')
 
 flux_parser.add_argument('h5file', type=str, help='HDF5 file')
 flux_parser.add_argument('-name', nargs='*', type=str, help='Only use monitors matching a given name', default=None)
@@ -33,6 +34,8 @@ layout_parser.add_argument('h5file', type=str, help='HDF5 file')
 
 material_parser.add_argument('h5file', type=str, help='HDF5 file')
 
+cross_section_parser.add_argument('h5file', type=str, help='HDF5 file')
+
 args = parser.parse_args()
 import matplotlib.pyplot as plt
 plt.show()
@@ -48,3 +51,6 @@ elif args.command == "layout":
 
 elif args.command == "material":
     qpost.viz.material.plot_materials(args.h5file)
+
+elif args.command == "cross-section":
+    qpost.viz.flux.cross_sections(args.h5file)

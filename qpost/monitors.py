@@ -15,8 +15,6 @@ class monitor:
 
     def flux(self):
         with h5py.File(self.filename) as f:
-            # if "flux" not in f[self.path]:
-                # raise KeyError("{} does not contain a flux".format(self.path))
             flux = f[self.path]["flux"][...]
             return flux
 
