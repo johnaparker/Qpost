@@ -28,6 +28,6 @@ def load_grid(filename):
         g = f['grid']
         for dset_name in g:
             dset = g[dset_name]
-            D[dset_name] = dset[0]
+            D[dset_name] = dset[...]
     return D
 

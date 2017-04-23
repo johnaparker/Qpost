@@ -10,6 +10,7 @@ subparsers = parser.add_subparsers(help='sub-command help', dest="command")
 flux_parser = subparsers.add_parser('flux', help='flux help')
 video_parser = subparsers.add_parser('video', help='video help')
 layout_parser = subparsers.add_parser('layout', help='layout help')
+material_parser = subparsers.add_parser('material', help='material help')
 
 flux_parser.add_argument('h5file', type=str, help='HDF5 file')
 flux_parser.add_argument('-name', nargs='*', type=str, help='Only use monitors matching a given name', default=None)
@@ -30,7 +31,11 @@ video_parser.add_argument('--objects', action='store_true', help='Display object
 
 layout_parser.add_argument('h5file', type=str, help='HDF5 file')
 
+material_parser.add_argument('h5file', type=str, help='HDF5 file')
+
 args = parser.parse_args()
+import matplotlib.pyplot as plt
+plt.show()
 
 if args.command == "flux":
     qpost.viz.flux.make_flux_plot(args.h5file, args.group, args.name)
@@ -40,3 +45,6 @@ elif args.command == "video":
 
 elif args.command == "layout":
     qpost.viz.layout.make_layout(args.h5file)
+
+elif args.command == "material":
+    qpost.viz.material.plot_materials(args.h5file)

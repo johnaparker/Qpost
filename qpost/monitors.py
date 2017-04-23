@@ -35,6 +35,23 @@ class cylinder_monitor(monitor):
         super().__init__(filename, "cylinder_monitor", name)
         self.surface = vec.load_cylinder_surface(filename, self.path)
 
+def get_freq_range(filename):
+    """get (min_freq, max_freq) across all existing monitors (includes tfsf)"""
+
+    with h5py.File(filename, 'r') as f:
+        min_freq = np.inf
+        max_freq = 0
+
+        def find_freq(name, dset):
+            nonlocal min_freq, max_freq
+            if "frequency" in name:
+                freq = dset[...]
+                min_freq = min(min_freq, np.min(freq))
+                max_freq = max(max_freq, np.max(freq))
+
+        f.visititems(find_freq)
+
+        return min_freq, max_freq
 
 # def flux_video(filename, dataname):
     # import matplotlib.animation as animation

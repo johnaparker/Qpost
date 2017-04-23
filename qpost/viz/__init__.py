@@ -3,3 +3,4 @@ from . import draw
 from . import video
 from . import flux
 from . import layout
+from . import material
