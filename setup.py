@@ -15,7 +15,7 @@ setup(
     packages=find_packages(),
     scripts=['bin/qbox'],
     long_description=read('README.md'),
-    install_requires=['h5py', 'numpy', 'scipy', 'matplotlib'],
+    install_requires=['h5py', 'numpy', 'scipy', 'matplotlib', 'argcomplete'],
     include_package_data = True,
     classifiers=[
         "Development Status :: 3 - Alpha",

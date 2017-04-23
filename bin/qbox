@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-import argparse
+import argparse, argcomplete
 
 # parse input
 parser = argparse.ArgumentParser(prog='qbox')
@@ -35,6 +35,7 @@ material_parser.add_argument('h5file', type=str, help='HDF5 file')
 
 cross_section_parser.add_argument('h5file', type=str, help='HDF5 file')
 
+argcomplete.autocomplete(parser)
 args = parser.parse_args()
 
 import qpost
