@@ -2,12 +2,14 @@ import matplotlib as mpl
 import matplotlib.pyplot as plt
 import numpy as np
 
-def rotation_transform(axis, angle, ax = plt.gca()):
+def rotation_transform(axis, angle, ax = None):
+    if ax is None: ax = plt.gca()
     t_scale = ax.transData
     t_rotate = mpl.transforms.Affine2D().rotate_deg_around(axis[0], axis[1], angle*180/np.pi)
     return t_rotate + t_scale
 
-def draw_box(p1, p2, angle = 0, ax = plt.gca(), **kwargs):
+def draw_box(p1, p2, angle = 0, ax = None, **kwargs):
+    if ax is None: ax = plt.gca()
     p1 = np.asarray(p1)
     p2 = np.asarray(p2)
 
@@ -20,14 +22,16 @@ def draw_box(p1, p2, angle = 0, ax = plt.gca(), **kwargs):
     ax.add_patch(box)
     return box
 
-def draw_circle(center, radius, ax = plt.gca(), **kwargs):
+def draw_circle(center, radius, ax = None, **kwargs):
+    if ax is None: ax = plt.gca()
     center = np.asarray(center)
 
     circle = mpl.patches.Circle(center, radius, **kwargs)
     ax.add_patch(circle)
     return circle
 
-def draw_ellipse(center, rx, ry, angle = 0, ax = plt.gca(), **kwargs):
+def draw_ellipse(center, rx, ry, angle = 0, ax = None, **kwargs):
+    if ax is None: ax = plt.gca()
     center = np.asarray(center)
 
     t = rotation_transform(center, angle, ax)
