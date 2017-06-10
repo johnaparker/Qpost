@@ -68,11 +68,11 @@ def make_video(h5file, dataset, t0=0, tf=-1, ms=30, saveFile=None,
                         b = qpost.objects.block(h5file, obj)
                         p1 = b.position - b.dimensions/2
                         p2 = b.position + b.dimensions/2
-                        patch = draw_box(p1, p2, angle=b.angle, **kwargs)
+                        patch = draw_box(p1, p2, angle=b.theta, **kwargs)
 
                     if object_group == "ellipses": 
                         ell = qpost.objects.ellipse(h5file, obj)
-                        patch = draw_ellipse(ell.position, ell.rx, ell.ry, angle=ell.angle, **kwargs)
+                        patch = draw_ellipse(ell.position, ell.rx, ell.ry, angle=ell.theta, **kwargs)
 
                     object_patches.append(patch)
 

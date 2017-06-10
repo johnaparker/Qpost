@@ -10,8 +10,7 @@ class object:
         self.path = "/objects/{0}/{1}".format(group_name, name)
 
         self.position = qpost.vec.load_vec(filename, self.path, "position")
-        self.orientation = qpost.vec.load_vec(filename, self.path, "orientation")
-        self.angle =  np.arctan2(self.orientation[1], self.orientation[0]) - np.pi/2
+        self.theta = qpost.vec.load_scalar(filename, self.path, "theta")
 
         with h5py.File(filename, 'r') as f:
             ref = f[self.path + "/material"][...].tolist()

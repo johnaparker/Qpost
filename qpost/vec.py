@@ -1,6 +1,10 @@
 import h5py
 import numpy as np
 
+def load_scalar(filename, path, scalar_name):
+    with h5py.File(filename, 'r') as f:
+        return f[path][scalar_name][...]
+
 def load_vec(filename, path, vec_name):
     with h5py.File(filename, 'r') as f:
         return f[path][vec_name][...]
