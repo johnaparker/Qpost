@@ -81,7 +81,7 @@ def cross_sections(filename):
             for cyl_name in g["cylinder_monitor"]:
                 mon = qpost.monitors.cylinder_monitor(filename, cyl_name)
                 if cyl_inside_box(mon.surface, tfsf.volume):
-                    absorb = mon.flux()/tfsf.flux
+                    absorb = -mon.flux()/tfsf.flux
                 if cyl_outside_box(mon.surface, tfsf.volume):
                     scat = mon.flux()/tfsf.flux
 
