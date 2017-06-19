@@ -4,7 +4,7 @@ import qpost.vec as vec
 
 def load_frequency(filename, path):
     with h5py.File(filename, 'r') as f:
-        return f[path]["frequency"][...]
+        return f[path]["dft_frequency"][...]
 
 class monitor:
     def __init__(self, filename, group_name, monitor_name):

@@ -28,7 +28,7 @@ class tfsf:
         with h5py.File(filename, 'r') as f:
             g = f[self.path]
             try:
-                self.frequency = g["frequency"][...]
+                self.frequency = g["dft_frequency"][...]
                 self.flux = g["flux"][...]
             except KeyError:
                 self.frequency = None
