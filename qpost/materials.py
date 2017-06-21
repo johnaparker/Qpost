@@ -3,7 +3,7 @@ import numpy as np
 import qpost.vec as vec
 
 class simple_material:
-    def __init__(self, eps, mu, conduc, material_type = "simple_material", name = None):
+    def __init__(self, eps, mu, conduc, material_type = "simple", name = None):
         self.eps = eps
         self.mu = mu
         self.conduc = conduc
@@ -64,7 +64,7 @@ def load_material(filename, material_name):
             kwargs[item] = g[item][...]
 
     mat_type = kwargs["material_type"].tolist().decode()
-    mat_map = {"simple_material": simple_material, 
+    mat_map = {"simple": simple_material, 
                "lorentz": lorentz,
                "drude":   drude,
                "debye":   debye }
