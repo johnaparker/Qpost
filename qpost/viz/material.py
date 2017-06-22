@@ -8,7 +8,7 @@ def plot_materials(h5file):
 
     freq = np.linspace(f_min, f_max, 1000)
     for name,material in materials.items():
-        eps = material.eps(freq)
+        eps = material.perimitivitty(freq)
         plt.figure()
         plt.plot(freq, eps.real, label = r'Re($\varepsilon_r$)')
         plt.plot(freq, eps.imag, label = r'Im($\varepsilon_r$)')

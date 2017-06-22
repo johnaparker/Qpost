@@ -8,10 +8,10 @@ class simple_material:
         self.mu = mu
         self.conduc = conduc
 
-    def eps(self, freq):
+    def perimitivitty(self, freq):
         """Return the complex permitvitty at freq"""
         omega = 2*np.pi*freq
-        return self.eps + 1j*self.sigma/omega
+        return self.eps + 1j*self.conduc/omega
 
 class debye:
     def __init__(self, eps_inf, delta_epsilon, tau, material_type = "debye", name = None):
@@ -21,7 +21,7 @@ class debye:
         self.material_type = material_type
         self.name = name
 
-    def eps(self, freq):
+    def perimitivitty(self, freq):
         """Return the complex permitvitty at freq"""
         omega = 2*np.pi*freq
         return self.eps_inf + np.sum(self.delta_epsilon[:,np.newaxis]/(1 - 1j*omega*self.tau[:,np.newaxis]), axis=0)
@@ -35,7 +35,7 @@ class drude:
         self.material_type = material_type
         self.name = name
 
-    def eps(self, freq):
+    def perimitivitty(self, freq):
         """Return the complex permitvitty at freq"""
         omega = 2*np.pi*freq
         return self.eps_inf - np.sum(self.omega_0[:,np.newaxis]**2/(omega**2 + 1j*omega*self.gamma[:,np.newaxis]), axis=0)
@@ -49,7 +49,7 @@ class lorentz:
         self.material_type = material_type
         self.name = name
 
-    def eps(self, freq):
+    def perimitivitty(self, freq):
         """Return the complex permitvitty at freq"""
         omega = 2*np.pi*freq
         return self.eps_inf - np.sum(self.delta_epsilon[:,np.newaxis]*self.omega_0[:,np.newaxis]**2/(self.omega_0[:,np.newaxis]**2 - omega**2 - 2j*omega*self.gamma[:,np.newaxis]), axis=0)
