@@ -57,11 +57,11 @@ def make_layout(h5file):
                         b = qpost.objects.block(h5file, obj)
                         p1 = b.position - b.dimensions/2
                         p2 = b.position + b.dimensions/2
-                        patch = draw.draw_box(p1, p2, angle=b.angle, **kwargs)
+                        patch = draw.draw_box(p1, p2, angle=b.theta, **kwargs)
 
                     if object_group == "ellipses": 
                         ell = qpost.objects.ellipse(h5file, obj)
-                        patch = draw.draw_ellipse(ell.position, ell.rx, ell.ry, angle=ell.angle, **kwargs)
+                        patch = draw.draw_ellipse(ell.position, ell.rx, ell.ry, angle=ell.theta, **kwargs)
 
         if "sources" in f:
             source_patch = mlines.Line2D([], [], color='red', label='sources')
